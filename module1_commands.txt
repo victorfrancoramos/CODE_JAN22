@@ -1,0 +1,1 @@
+curl -kiu admin:Netapp1! -X GET https://cluster1.demo.netapp.com/api/storage/aggregates
