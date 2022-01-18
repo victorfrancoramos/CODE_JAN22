@@ -1,11 +1,11 @@
 {
   "aggregates": [
     {
-      "name": "aggr1"
+      "name": "aggr1_cluster2_01"
     }
   ],
-  "name": "vol_cs_dept",
+  "name": "vol5",
   "svm": {
-    "name": "svm1"
+    "name": "svm21"
   }
 }
