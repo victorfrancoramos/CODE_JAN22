@@ -1,0 +1,11 @@
+{
+  "aggregates": [
+    {
+      "name": "aggr1"
+    }
+  ],
+  "name": "vol_cs_dept",
+  "svm": {
+    "name": "svm1"
+  }
+}
