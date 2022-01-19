@@ -1,0 +1,4 @@
+python3.7 create_volume_pcl.py -c cluster1 -v Vol2 -vs VServer1 -a aggr1 -s 100M -u admin -p Netapp1!
+
+python3.7 qtree_create.py -c cluster1 -v Vol1 -svm VServer1 -q QTree1 -u admin -p Netapp1!
+python3.7 qtree.py -c cluster1 -v Vol1 -svm VServer1 -q QTree1 -qos QoS_Policy1 -sh 1000000 -fh 1000 -un admin -u admin -p Netapp1!
