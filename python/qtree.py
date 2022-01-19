@@ -46,7 +46,9 @@ def create_policy_rule(volume_name: str, vserver_name: str, qtree_name: str, use
         # ERROR: AttributeError: 'Namespace' object has no attribute 'user_name'
         # resource.users = [{"name": "jsmith"}]
         'users': {'name': user_name}
-
+        #ERROR SOLUTION:
+        #In the  parse_args(), the highlighted should be user_name.
+        #    parser.add_argument("-un", "--users_name", required=True, help="Quota Users name")
     }
     quotarule = QuotaRule(**data)
     try:
