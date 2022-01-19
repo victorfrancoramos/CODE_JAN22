@@ -64,6 +64,46 @@ def create_qos_policy(vserver_name: str, qos_policy_name: str) -> None:
         print("Error: Policy was not created: %s" % err)
     return
 
+def parse_args() -> argparse.Namespace:
+    """Parse the command line arguments from the user"""
+
+    parser = argparse.ArgumentParser(
+        description="This script will create a new qtree."
+    )
+    parser.add_argument(
+        "-c", "--cluster", required=True, help="API server IP:port details"
+    )
+    parser.add_argument(
+        "-v", "--volume_name", required=True, help="Volume to create the qtree in"
+    )
+    parser.add_argument(
+        "-svm", "--svm_name", required=True, help="SVM to create the volume from"
+    )
+    parser.add_argument(
+        "-q", "--qtree_name", required=True, help="Qtree name"
+    )
+    parser.add_argument(
+        "-qos", "--qos_policy_name", required=True, help="QoS policy name"
+    )
+    parser.add_argument(
+        "-sh", "--space_hard_limit", required=False, help="Space Hard Limit"
+    )
+    parser.add_argument(
+        "-fh", "--file_hard_limit", required=False, help="File Hard Limit"
+    )
+    parser.add_argument(
+        "-un", "--users_name", required=True, help="Quota Users name"
+    )
+    parser.add_argument("-u", "--api_user", default="admin", help="API Username")
+    parser.add_argument("-p", "--api_pass", help="API Password")
+    parsed_args = parser.parse_args()
+
+    # collect the password without echo if not already provided
+    if not parsed_args.api_pass:
+        parsed_args.api_pass = getpass()
+
+    return parsed_args
+
 if __name__ == "__main__":
     logging.basicConfig(
         level=logging.INFO,
