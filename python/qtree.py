@@ -35,7 +35,7 @@ def create_qtree(volume_name: str, vserver_name: str, qtree_name: str) -> None:
     return
 
 
-def create_policy_rule(volume_name: str, vserver_name: str, qtree_name: str, users_name: str, space_hard: int, file_hard: int) -> None:
+def create_policy_rule(volume_name: str, vserver_name: str, qtree_name: str, user_name: str, space_hard: int, file_hard: int) -> None:
     data = {
         'qtree': {'name': qtree_name},
         'volume': {'name': volume_name},
@@ -45,7 +45,7 @@ def create_policy_rule(volume_name: str, vserver_name: str, qtree_name: str, use
         'type': 'user',
         # ERROR: AttributeError: 'Namespace' object has no attribute 'user_name'
         # resource.users = [{"name": "jsmith"}]
-        'users': {'name': users_name}
+        'users': {'name': user_name}
         #ERROR SOLUTION:
         #In the  parse_args(), the highlighted should be user_name.
         #    parser.add_argument("-un", "--users_name", required=True, help="Quota Users name")
@@ -102,7 +102,7 @@ def parse_args() -> argparse.Namespace:
         "-fh", "--file_hard_limit", required=False, help="File Hard Limit"
     )
     parser.add_argument(
-        "-un", "--users_name", required=True, help="Quota Users name"
+        "-un", "--user_name", required=True, help="Quota Users name"
     )
     parser.add_argument("-u", "--api_user", default="admin", help="API Username")
     parser.add_argument("-p", "--api_pass", help="API Password")
@@ -126,6 +126,6 @@ if __name__ == "__main__":
     )
     # Create a quota tree and a policy rule for the qtree
     create_qtree(args.volume_name, args.vserver_name, args.qtree_name)
-    create_policy_rule(args.volume_name, args.vserver_name, args.qtree_name, args.users_name, args.space_hard,
+    create_policy_rule(args.volume_name, args.vserver_name, args.qtree_name, args.user_name, args.space_hard,
                        args.file_hard)
     create_qos_policy(args.vserver_name, args.qos_policy_name)
