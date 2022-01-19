@@ -34,21 +34,38 @@ def create_qtree(volume_name: str, vserver_name: str, qtree_name: str) -> None:
         print("Error: QTree was not created: %s" % err)
     return
 
-
 def create_policy_rule(volume_name: str, vserver_name: str, qtree_name: str, user_name: str, space_hard: int, file_hard: int) -> None:
+    '''
+    Using as reference for the required fields: https://library.netapp.com/ecmdocs/ECMLP2858435/html/resources/quota_rule.html
+    with HostConnection("<mgmt-ip>", username="admin", password="password", verify=False):
+        resource = QuotaRule()
+        resource.svm.name = "svm1"
+        resource.volume.name = "vol1"
+        resource.type = "user"
+        resource.users = [{"name": "jsmith"}]
+        resource.qtree.name = "qt1"
+        resource.user_mapping = "on"
+        resource.space.hard_limit = 8192
+        resource.space.soft_limit = 1024
+        resource.files.hard_limit = 20
+        resource.files.soft_limit = 10
+        resource.post(hydrate=True)
+        print(resource)
+    '''
     data = {
-        'qtree': {'name': qtree_name},
-        'volume': {'name': volume_name},
         'svm': {'name': vserver_name},
-        'files': {'hard_limit': file_hard, 'soft_limit': 100},
-        'space': {'hard_limit': space_hard, 'soft_limit': 100},
+        'volume': {'name': volume_name},
         'type': 'user',
         # ERROR: AttributeError: 'Namespace' object has no attribute 'user_name'
         # resource.users = [{"name": "jsmith"}]
-        'users': {'name': user_name}
+        'users': {'name': user_name},
         #ERROR SOLUTION:
         #In the  parse_args(), the highlighted should be user_name.
         #    parser.add_argument("-un", "--users_name", required=True, help="Quota Users name")
+        'qtree': {'name': qtree_name},
+        'user_mapping': 'on',
+        'space': {'hard_limit': space_hard, 'soft_limit': 100},
+        'files': {'hard_limit': file_hard, 'soft_limit': 100},
     }
     quotarule = QuotaRule(**data)
     try:
@@ -96,10 +113,10 @@ def parse_args() -> argparse.Namespace:
         "-qos", "--qos_policy_name", required=True, help="QoS policy name"
     )
     parser.add_argument(
-        "-sh", "--space_hard_limit", required=False, help="Space Hard Limit"
+        "-sh", "--space_hard", required=False, help="Space Hard Limit"
     )
     parser.add_argument(
-        "-fh", "--file_hard_limit", required=False, help="File Hard Limit"
+        "-fh", "--file_hard", required=False, help="File Hard Limit"
     )
     parser.add_argument(
         "-un", "--user_name", required=True, help="Quota Users name"
