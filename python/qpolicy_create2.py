@@ -14,7 +14,7 @@ with HostConnection("cluster1", username="admin", password="Netapp1!", verify=Fa
     resource.svm = {"name": "VServer1"}
     resource.volume = {"name": "Vol1"}
     resource.type = "user"
-    resource.users = {"name": "jsmith"}
+    resource.users = {"name": "admin"}
     resource.qtree = {"name": "QTree1"}
 #    resource.user_mapping = "on"
     resource.space = {"hard_limit": 8192, "soft_limit": 1024}
