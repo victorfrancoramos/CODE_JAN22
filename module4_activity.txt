@@ -1,0 +1,20 @@
+Module 4 Activity: Ansible ad-hoc commands
+==========================================
+1. Define an ad-hoc command to create a volume
+ansible localhost -m na_ontap_volume -a 'hostname=cluster2.demo.netapp.com username=admin password=Netapp1! https=true validate_certs=false state=present name=vol15Jul vserver=svm21 aggregate_name=aggr2 size=1 junction_path=/vol15Jul'
+
+2. To delete the same volume (same command but changing state from present > absent)
+ansible localhost -m na_ontap_volume -a 'hostname=cluster2.demo.netapp.com username=admin password=Netapp1! https=true validate_certs=false state=absent name=vol15Jul vserver=svm21 aggregate_name=aggr2 size=1 junction_path=/vol15Jul'
+
+3. An ad-hoc command to collect all the information of the cluster
+ansible localhost -m na_ontap_info -a 'hostname=cluster2.demo.netapp.com username=admin password=Netapp1! https=true validate_certs=false'
+(na_ontap_gather_facts is deprecated in favor of na_ontap_info)
+
+4. To limit what I want to collect, use gather_subset
+ansible localhost -m na_ontap_info -a 'hostname=cluster2.demo.netapp.com username=admin password=Netapp1! https=true validate_certs=false gather_subset=vserver_info'
+
+5. Ad-hoc command to list volumes on a svm
+ansible localhost -m na_ontap_info -a 'hostname=cluster2.demo.netapp.com username=admin password=Netapp1! https=true validate_certs=false gather_subset=volume_info vserver=svm21'
+This gives an error as "Note that not all subsets are supported on a vserver, and 'all' will trigger an error."
+Thus we need to use and ontap command with na_ontap_command
+ansible localhost -m na_ontap_command -a 'hostname=cluster2.demo.netapp.com username=admin password=Netapp1! https=true validate_certs=false command="volume show -vserver svm2"'
