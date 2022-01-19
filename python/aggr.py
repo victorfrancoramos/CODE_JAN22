@@ -9,4 +9,4 @@ conn = HostConnection("192.168.0.111", username = "admin", password = "Netapp1!"
 config.CONNECTION = conn
 aggr = Aggregate()
 aggr.get()
-print(aggr.name + " " + aggr.uuid)
+print(aggr)
