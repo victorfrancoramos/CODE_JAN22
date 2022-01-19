@@ -1,0 +1,13 @@
+Curl: Create a Volume, Get the Volume UUID, and Resize the Volume
+curl -kiu admin:Netapp1! -X POST https://cluster2.demo.netapp.com/api/storage/volumes -d '{"name": "vol3", "aggregates": [{"name": "aggr2"}], "svm": {"name": "VServer2"}, "size": "300MB"}'
+curl -kiu admin:Netapp1! -X GET https://cluster2.demo.netapp.com/api/storage/volumes?name=vol3&svm.name=VServer2
+curl -kiu admin:Netapp1! -X PATCH https://cluster2.demo.netapp.com/api/storage/volumes/5a3ec00d-ed46-11ea-b13b-005056ab806f?return_timeout=0&sizing_method=use_existing_resources -d '{"size":"400MB"}'
+
+Create a Volume by Using NetApp PowerShell Toolkit
+$result = Invoke-RestMethod -method POST –uri "https://cluster2.demo.netapp.com/api/storage/volumes" –header @{"accept" = "application/json"; "authorization" = "Basic YWRtaW46TmV0YXBwMSE="} –body '{"name": "vol3", "aggregates": [{"name": "aggr2"}], "nas.path": "/vol3", "size": 300000000, "svm.name": "VServer2"}'
+
+Get the UUID for the Volume by Using NetApp PowerShell Toolkit
+$result = Invoke-RestMethod -method GET –uri "https://cluster2.demo.netapp.com/api/storage/volumes?svm.name=VServer2&name=vol3" –header @{"accept" = "application/json"; "authorization" = "Basic YWRtaW46TmV0YXBwMSE="}
+
+Resize a Volume by Using NetApp PowerShell Toolkit
+$result = Invoke-RestMethod -method PATCH –uri "https://cluster2.demo.netapp.com/api/storage/volumes/5a3ec00d-ed46-11ea-b13b-005056ab806f?return_timeout=0&sizing_method=use_existing_resources" –header @{"accept" = "application/json"; "authorization" = "Basic YWRtaW46TmV0YXBwMSE="} –body '{"size": "400000000"}'
