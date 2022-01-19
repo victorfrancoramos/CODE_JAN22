@@ -1,18 +1,11 @@
 #! /usr/bin/env python3.7
-
 """
-ONTAP 9.7 REST API Python Client Library Scripts
-Author: Victor Franco
-This script performs the following:
-        - Create a qtree (or a quota tree)
+ONTAP 9.7 REST API Python Client Library Scripts: This script performs the following:
+        - Create a qtree (or quota tree)
         - Create a quota policy rule
-        - Create a QoS policy on an existing SVM
-
-usage: python3.7 qtree.py [-h] -c CLUSTER -v VOLUME_NAME -svm SVM_NAME -q QTREE_NAME -qos QOS_POLICY_NAME
-               -sh SPACE_HARD_LIMIT -fh FILE_HARD_LIMIT -un USERS_NAME [-u API_USER] [-p API_PASS]
-The following arguments are required: -c/--cluster, -v/--volume_name, -vs/--vserver_name,
-                -q/--qtree_name, -qos/--qos_policy_name, -sh/--space_hard_limit, -fh/--file_hard_limit
-                -un/--users_name
+        - Create a QoS (Quality of Service) policy on an existing SVM
+usage: python3.7 qtree.py [-h] -c cluster -v VOLUME_NAME -vs VSERVER_NAME -q QTREE_NAME
+       -qos QOS_POLICY_NAME -sh SPACE_HARD -fh FILE_HARD -un USER_NAME [-u API_USER] [-p API_PASS]
 """
 
 import argparse
@@ -22,122 +15,64 @@ import logging
 from netapp_ontap import config, HostConnection, NetAppRestError
 from netapp_ontap.resources import Qtree, QuotaRule, QosPolicy
 
-def make_qtree(svm_name: str, volume_name: str, qtree_name: str) -> None:
-    """Creates a new qtree in a volume in a SVM"""
-
+def create_qtree(volume_name: str, vserver_name: str, qtree_name: str) -> None:
     data = {
         'name': qtree_name,
-        'svm': {'name': svm_name},
-        'volume': [{'name': volume_name}]
+        'volume': {'name': volume_name},
+        'svm': {'name': vserver_name},
+        'security_style': 'unix',
+        'unix_permissions': 744,
+        'export_policy_name': 'default',
+        'qos_policy': {'max_throughput_ops': 1000}
     }
-
     qtree = Qtree(**data)
-
     try:
         qtree.post()
         print("Qtree %s created successfully" % qtree.name)
     except NetAppRestError as err:
-        print("Error: Qtree was not created: %s" % err)
+        print("Error: QTree was not created: %s" % err)
     return
 
-def make_quota_rule(svm_name: str, volume_name: str, users_name: str, space_hard_limit: str, file_hard_limit: str) -> None:
-    """Creates a new Users Quota Rule. (type set to user -no choice among user, quote or qtree-)"""
-
+def create_policy_rule(volume_name: str, vserver_name: str, qtree_name: str, user_name: str,
+space_hard: int, file_hard: int) -> None:
     data = {
-        'svm': {'name': svm_name},
-        'volume': [{'name': volume_name}],
-        'type': "user",
-        'users_name': {'name': users_name},
-        'space_hard_limit': {'name': space_hard_limit},
-        'file_hard_limit': {'name': file_hard_limit}
+        'qtree': {'name': qtree_name},
+        'volume': {'name': volume_name},
+        'svm': {'name': vserver_name},
+        'files': {'hard_limit': file_hard, 'soft_limit': 100},
+        'space': {'hard_limit': space_hard, 'soft_limit': 100},
+        'type': 'user'
     }
-
-    quota_rule = QuotaRule(**data)
-
+    quotarule = QuotaRule(**data)
     try:
-        quota_rule.post()
-        print("Quota Rule %s created successfully" % quota_rule.name)
+        quotarule.post()
+        print("Rule 'tree' created successfully for %s" % qtree_name)
     except NetAppRestError as err:
-        print("Error: Quota Rule was not created: %s" % err)
+        print("Error: Rule was not created: %s" % err)
     return
 
-def make_qos_policy(svm_name: str, qos_policy_name: str) -> None:
-    """Creates a new QoS Policy"""
-
+def create_qos_policy(vserver_name: str, qos_policy_name: str) -> None:
     data = {
         'name': qos_policy_name,
-        'svm': {'name': svm_name},
-        'fixed.capacity_shared': False,
-        'fixed.max_throughput_iops': 10000,
-        'fixed.min_throughput_iops': 5000
+        'svm': {'name': vserver_name},
+        'adaptive': {'expected_iops': 5000, 'peak_iops': 6000, 'absolute_min_iops': 1000}
     }
-
-    qos_policy = QosPolicy(**data)
-
+    qospolicy = QosPolicy(**data)
     try:
-        qos_policy.post()
-        print("QoS Policy %s created successfully" % qtree.name)
+        qospolicy.post()
+        print("QoS Policy %s created successfully" % qos_policy_name)
     except NetAppRestError as err:
-        print("Error: QoS Policy was not created: %s" % err)
+        print("Error: Policy was not created: %s" % err)
     return
 
-
-def parse_args() -> argparse.Namespace:
-    """Parse the command line arguments from the user"""
-
-    parser = argparse.ArgumentParser(
-        description="This script will create a new qtree."
-    )
-    parser.add_argument(
-        "-c", "--cluster", required=True, help="API server IP:port details"
-    )
-    parser.add_argument(
-        "-v", "--volume_name", required=True, help="Volume to create the qtree in"
-    )
-    parser.add_argument(
-        "-svm", "--svm_name", required=True, help="SVM to create the volume from"
-    )
-    parser.add_argument(
-        "-q", "--qtree_name", required=True, help="Qtree name"
-    )
-    parser.add_argument(
-        "-qos", "--qos_policy_name", required=True, help="QoS policy name"
-    )
-    parser.add_argument(
-        "-sh", "--space_hard_limit", required=False, help="Space Hard Limit"
-    )
-    parser.add_argument(
-        "-fh", "--file_hard_limit", required=False, help="File Hard Limit"
-    )
-    parser.add_argument(
-        "-un", "--users_name", required=True, help="Quota Users name"
-    )
-    parser.add_argument("-u", "--api_user", default="admin", help="API Username")
-    parser.add_argument("-p", "--api_pass", help="API Password")
-    parsed_args = parser.parse_args()
-
-    # collect the password without echo if not already provided
-    if not parsed_args.api_pass:
-        parsed_args.api_pass = getpass()
-
-    return parsed_args
-
-
 if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.INFO,
-        format="[%(asctime)s] [%(levelname)5s] [%(module)s:%(lineno)s] %(message)s",
-    )
+    logging.basicConfig(level=logging.INFO, format="[%(asctime)s] [%(levelname)5s] [%(module)s:%(lineno)s]
+                        %(message)s")
     args = parse_args()
-    config.CONNECTION = HostConnection(
-        args.cluster, username=args.api_user, password=args.api_pass, verify=False,
-    )
-
-    # Create a Qtree
-    make_qtree(args.svm_name, args.volume_name, args.qtree_name)
-
-    # Create a Quota Rule
-    make_quota_rule(args.svm_name, args.volume_name, args.users_name, args.space_hard_limit, args.file_hard_limit)
-
-    # Create a QoS Policy
-    make_qos_policy(args.svm_name, args.qos_policy_name)
+    config.CONNECTION = HostConnection(args.cluster, username=args.api_user, password=args.api_pass,
+                                       verify=False)
+    # Create a quota tree and a policy rule for the qtree
+    create_qtree(args.volume_name, args.vserver_name, args.qtree_name)
+    create_policy_rule(args.volume_name, args.vserver_name, args.qtree_name,
+                            args.user_name,args.space_hard, args.file_hard)
+    create_qos_policy(args.vserver_name, args.qos_policy_name)
