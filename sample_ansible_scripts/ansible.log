@@ -1,0 +1,4 @@
+2022-01-19 12:37:35,031 p=21612 u=root n=ansible | localhost | CHANGED => {
+    "changed": true,
+    "msg": "<results xmlns=\"http://www.netapp.com/filer/admin\" status=\"passed\"><cli-output>NetApp Release Bluepaddle__9.7.0: Mon Jul 27 21:07:07 UTC 2020\n\n</cli-output><cli-result-value>1</cli-result-value></results>"
+}
