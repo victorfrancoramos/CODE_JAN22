@@ -40,8 +40,10 @@ def create_policy_rule(volume_name: str, vserver_name: str, qtree_name: str, use
         'svm': {'name': vserver_name},
         'files': {'hard_limit': file_hard, 'soft_limit': 100},
         'space': {'hard_limit': space_hard, 'soft_limit': 100},
-        'type': 'user'
-#ERROR: AttributeError: 'Namespace' object has no attribute 'user_name'
+        'type': 'user',
+        #ERROR: AttributeError: 'Namespace' object has no attribute 'user_name'
+         'users': {'name': user_name}
+
     }
     quotarule = QuotaRule(**data)
     try:
