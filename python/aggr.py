@@ -11,4 +11,12 @@ aggr = Aggregate()
 aggr.get()
 print(aggr)
 
+print("Other option:")
 print(list(Aggregate.get_collection()))
+
+print("Other option:")
+for x in Aggregate.get_collection():
+ x.get()
+ print(x)
+ print(x.name)
+ print(x, type(x))
