@@ -77,7 +77,7 @@ def parse_args() -> argparse.Namespace:
         "-v", "--volume_name", required=True, help="Volume to create the qtree in"
     )
     parser.add_argument(
-        "-svm", "--svm_name", required=True, help="SVM to create the volume from"
+        "-svm", "--vserver_name", required=True, help="SVM to create the volume from"
     )
     parser.add_argument(
         "-q", "--qtree_name", required=True, help="Qtree name"
