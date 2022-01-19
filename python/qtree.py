@@ -33,8 +33,7 @@ def create_qtree(volume_name: str, vserver_name: str, qtree_name: str) -> None:
         print("Error: QTree was not created: %s" % err)
     return
 
-def create_policy_rule(volume_name: str, vserver_name: str, qtree_name: str, user_name: str,
-space_hard: int, file_hard: int) -> None:
+def create_policy_rule(volume_name: str, vserver_name: str, qtree_name: str, user_name: str, space_hard: int, file_hard: int) -> None:
     data = {
         'qtree': {'name': qtree_name},
         'volume': {'name': volume_name},
@@ -66,13 +65,10 @@ def create_qos_policy(vserver_name: str, qos_policy_name: str) -> None:
     return
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format="[%(asctime)s] [%(levelname)5s] [%(module)s:%(lineno)s]
-                        %(message)s")
+    logging.basicConfig(level=logging.INFO, format="[%(asctime)s] [%(levelname)5s] [%(module)s:%(lineno)s] %(message)s")
     args = parse_args()
-    config.CONNECTION = HostConnection(args.cluster, username=args.api_user, password=args.api_pass,
-                                       verify=False)
+    config.CONNECTION = HostConnection(args.cluster, username=args.api_user, password=args.api_pass, verify=False)
     # Create a quota tree and a policy rule for the qtree
     create_qtree(args.volume_name, args.vserver_name, args.qtree_name)
-    create_policy_rule(args.volume_name, args.vserver_name, args.qtree_name,
-                            args.user_name,args.space_hard, args.file_hard)
+    create_policy_rule(args.volume_name, args.vserver_name, args.qtree_name, args.user_name, args.space_hard, args.file_hard)
     create_qos_policy(args.vserver_name, args.qos_policy_name)
