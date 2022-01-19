@@ -40,7 +40,8 @@ def create_policy_rule(volume_name: str, vserver_name: str, qtree_name: str, use
         'svm': {'name': vserver_name},
         'files': {'hard_limit': file_hard, 'soft_limit': 100},
         'space': {'hard_limit': space_hard, 'soft_limit': 100},
-        'type': 'user'
+#        'type': 'user'
+        'type': 'qtree'
     }
     quotarule = QuotaRule(**data)
     try:
@@ -91,9 +92,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "-fh", "--file_hard_limit", required=False, help="File Hard Limit"
     )
-    parser.add_argument(
-        "-un", "--users_name", required=True, help="Quota Users name"
-    )
+#    parser.add_argument(
+#       "-un", "--users_name", required=True, help="Quota Users name"
+#    )
     parser.add_argument("-u", "--api_user", default="admin", help="API Username")
     parser.add_argument("-p", "--api_pass", help="API Password")
     parsed_args = parser.parse_args()
