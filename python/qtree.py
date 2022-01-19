@@ -143,6 +143,5 @@ if __name__ == "__main__":
     )
     # Create a quota tree and a policy rule for the qtree
     create_qtree(args.volume_name, args.vserver_name, args.qtree_name)
-    create_policy_rule(args.volume_name, args.vserver_name, args.qtree_name, args.user_name, args.space_hard,
-                       args.file_hard)
+    create_policy_rule(args.volume_name, args.vserver_name, args.qtree_name, args.user_name, args.space_hard, args.file_hard)
     create_qos_policy(args.vserver_name, args.qos_policy_name)

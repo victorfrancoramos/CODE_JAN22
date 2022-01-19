@@ -56,7 +56,6 @@ def create_policy_rule(vserver_name: str, volume_name: str,  user_name: str, qtr
 
 def parse_args() -> argparse.Namespace:
     """Parse the command line arguments from the user"""
-
     parser = argparse.ArgumentParser(
         description="This script will create a new quota policy for a qtree."
     )
@@ -102,5 +101,4 @@ if __name__ == "__main__":
         args.cluster, username=args.api_user, password=args.api_pass, verify=False,
     )
     # Create a policy rule for the qtree
-    create_policy_rule(args.volume_name, args.vserver_name, args.qtree_name, args.user_name, args.space_hard,
-                       args.file_hard)
+    create_policy_rule(args.volume_name, args.vserver_name, args.qtree_name, args.user_name, args.space_hard, args.file_hard)
