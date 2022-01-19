@@ -65,9 +65,14 @@ def create_qos_policy(vserver_name: str, qos_policy_name: str) -> None:
     return
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format="[%(asctime)s] [%(levelname)5s] [%(module)s:%(lineno)s] %(message)s")
+    logging.basicConfig(
+        level=logging.INFO,
+        format="[%(asctime)s] [%(levelname)5s] [%(module)s:%(lineno)s] %(message)s",
+    )
     args = parse_args()
-    config.CONNECTION = HostConnection(args.cluster, username=args.api_user, password=args.api_pass, verify=False)
+    config.CONNECTION = HostConnection(
+        args.cluster, username=args.api_user, password=args.api_pass, verify=False,
+    )
     # Create a quota tree and a policy rule for the qtree
     create_qtree(args.volume_name, args.vserver_name, args.qtree_name)
     create_policy_rule(args.volume_name, args.vserver_name, args.qtree_name, args.user_name, args.space_hard, args.file_hard)
