@@ -29,3 +29,15 @@ print(list(Aggregate.get_collection()))
 config.CONNECTION = conn2
 print("Aggregates for cluster2:")
 print(list(Aggregate.get_collection()))
+
+# Get details
+config.CONNECTION = conn2
+print("To get details:")
+for x in Aggregate.get_collection():
+ x.get()
+ print("Collection elements:")
+ print(x)
+ print("Aggregate name:")
+ print(x.name)
+ print("Aggregate uuid:")
+ print(x.uuid)
