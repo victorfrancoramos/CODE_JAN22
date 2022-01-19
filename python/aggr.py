@@ -10,3 +10,5 @@ config.CONNECTION = conn
 aggr = Aggregate()
 aggr.get()
 print(aggr)
+
+print(list(Aggregate.get_collection()))
