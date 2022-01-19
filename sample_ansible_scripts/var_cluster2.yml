@@ -9,7 +9,7 @@ dst_ontap: 192.168.0.101
 aggr:
  - name: aggr1_cluster2_01_data # New Data Aggregate name
    node: cluster2-01
-   diskcount: 13 # Number of disks to add to the Data Aggregate
+   diskcount: 10 # Number of disks to add to the Data Aggregate
 svm:
  - name: svm2
    rootvol: svm2_root

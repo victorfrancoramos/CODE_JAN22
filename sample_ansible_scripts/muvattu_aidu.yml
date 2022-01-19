@@ -2,13 +2,13 @@
 
 ################################################################################
 #
-# Title:        create_flexvol_perf.py
-# Author:       Ronald Feist
-# Date:         2020-06-10
-# Description:  Create a volume on the aggregate with the most headroom
+# Title:        35_create_export_policy_rule.yml
+# Author:       Vish Hulikal
+# Date:         2020-09-01
+# Description:  Create export policy rule for SVM
 #               with Ansible modules
 #
-# Modules:      na_ontap_volume, na_ontap_aggregate
+# Modules:      na_ontap_volume
 #
 # URLs:         http://docs.netapp.com/ontap-9/index.jsp
 #               https://galaxy.ansible.com/netapp/ontap
@@ -29,20 +29,22 @@
       validate_certs: false
       use_rest:       Always
   vars_files:
-    - global.vars
+    - global_nas.vars
   collections:
     - netapp.ontap
+
   tasks:
-  - name: Create volume on primary SVM
-    na_ontap_volume:
+  - name: Create export policy rule for svm.
+    na_ontap_export_policy_rule:
       state:                 present
-      name:                  "{{ PRI_SVM }}_vol_01"
+      name:                  default123
       vserver:               "{{ PRI_SVM }}"
-      size:                  "{{ VOL_SIZE }}"
-      size_unit:             gb
-      aggregate_name:        "{{ PERF_AGGR }}"
-      comment:               Created with Ansible
-      space_guarantee:       volume
-      policy:                default
-      volume_security_style: unix
+      client_match:          0.0.0.0/0
+      ro_rule:               any
+      rw_rule:               any
+      protocol:              nfs3
+      super_user_security:   any
+      anonymous_user_id:     65534
+      allow_suid:            true
       <<: *input
+

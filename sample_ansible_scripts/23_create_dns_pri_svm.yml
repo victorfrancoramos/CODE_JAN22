@@ -2,19 +2,19 @@
 
 ################################################################################
 #
-# Title:        create_flexvol_perf.py
-# Author:       Ronald Feist
-# Date:         2020-06-10
-# Description:  Create a volume on the aggregate with the most headroom
+# Title:        23_create_dns_pri_svm.yml
+# Author:       Vish Hulikal
+# Date:         2020-06-20
+# Description:  Create DNS on primary SVM for NAS
 #               with Ansible modules
 #
-# Modules:      na_ontap_volume, na_ontap_aggregate
+# Modules:      na_ontap_dns
 #
 # URLs:         http://docs.netapp.com/ontap-9/index.jsp
 #               https://galaxy.ansible.com/netapp/ontap
 #
 # Built-in help:
-# ansible-doc netapp.ontap.na_ontap_volume
+# ansible-doc netapp.ontap.na_ontap_dns
 #
 ################################################################################
 
@@ -29,20 +29,15 @@
       validate_certs: false
       use_rest:       Always
   vars_files:
-    - global.vars
+    - global_nas.vars
   collections:
     - netapp.ontap
+
   tasks:
-  - name: Create volume on primary SVM
-    na_ontap_volume:
+  - name: Create DNS on primary SVM
+    na_ontap_dns:
       state:                 present
-      name:                  "{{ PRI_SVM }}_vol_01"
       vserver:               "{{ PRI_SVM }}"
-      size:                  "{{ VOL_SIZE }}"
-      size_unit:             gb
-      aggregate_name:        "{{ PERF_AGGR }}"
-      comment:               Created with Ansible
-      space_guarantee:       volume
-      policy:                default
-      volume_security_style: unix
+      domains:               "{{ PRI_DOMAIN }}"
+      nameservers:           "{{ PRI_DNS1 }}"
       <<: *input
