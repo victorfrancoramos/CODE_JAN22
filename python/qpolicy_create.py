@@ -7,13 +7,15 @@ usage: python3.7 qpolicy_create.py [-h] -c cluster -v VOLUME_NAME -vs VSERVER_NA
 """
 
 import argparse
-from getpass import getpass
 import logging
+from getpass import getpass
 
 from netapp_ontap import config, HostConnection, NetAppRestError
 from netapp_ontap.resources import QuotaRule
 
-def create_policy_rule(vserver_name: str, volume_name: str,  user_name: str, qtree_name: str, space_hard: int, file_hard: int) -> None:
+
+def create_policy_rule(vserver_name: str, volume_name: str, user_name: str, qtree_name: str, space_hard: int,
+                       file_hard: int) -> None:
     '''
     Using as reference for the required fields: https://library.netapp.com/ecmdocs/ECMLP2858435/html/resources/quota_rule.html
     with HostConnection("<mgmt-ip>", username="admin", password="password", verify=False):
@@ -38,8 +40,8 @@ def create_policy_rule(vserver_name: str, volume_name: str,  user_name: str, qtr
         # ERROR: AttributeError: 'Namespace' object has no attribute 'user_name'
         # resource.users = [{"name": "jsmith"}]
         'users': {'name': user_name},
-        #ERROR SOLUTION:
-        #In the  parse_args(), the highlighted should be user_name.
+        # ERROR SOLUTION:
+        # In the  parse_args(), the highlighted should be user_name.
         #    parser.add_argument("-un", "--users_name", required=True, help="Quota Users name")
         'qtree': {'name': qtree_name},
         'user_mapping': 'on',
@@ -53,6 +55,7 @@ def create_policy_rule(vserver_name: str, volume_name: str,  user_name: str, qtr
     except NetAppRestError as err:
         print("Error: Rule was not created: %s" % err)
     return
+
 
 def parse_args() -> argparse.Namespace:
     """Parse the command line arguments from the user"""
@@ -101,4 +104,5 @@ if __name__ == "__main__":
         args.cluster, username=args.api_user, password=args.api_pass, verify=False,
     )
     # Create a policy rule for the qtree
-    create_policy_rule(args.volume_name, args.vserver_name, args.qtree_name, args.user_name, args.space_hard, args.file_hard)
+    create_policy_rule(args.volume_name, args.vserver_name, args.qtree_name, args.user_name, args.space_hard,
+                       args.file_hard)
