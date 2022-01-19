@@ -11,13 +11,27 @@ from netapp_ontap.resources import QuotaRule
 
 with HostConnection("cluster1", username="admin", password="Netapp1!", verify=False):
     resource = QuotaRule()
-    resource.svm = [{"name": "VServer1"}]
-    resource.volume = [{"name": "Vol1"}]
+    resource.svm = {"name": "VServer1"}
+    resource.volume = {"name": "Vol1"}
     resource.type = "user"
-    resource.users = [{"name": "admin"}]
-    resource.qtree = [{"name": "QTree7"}]
+    resource.users = {"name": "admin"}
+    resource.qtree = {"name": "QTree7"}
     resource.user_mapping = "on"
-    resource.space = [{"hard_limit": 8192, "soft_limit": 1024}]
-    resource.files = [{"hard_limit": 20, "soft_limit": 10}]
+    resource.space = {"hard_limit": 8192, "soft_limit": 1024}
+    resource.files = {"hard_limit": 20, "soft_limit": 10}
     resource.post(hydrate=True)
     print(resource)
+'''
+with HostConnection("<mgmt-ip>", username="admin", password="password", verify=False):
+    resource = QuotaRule()
+    resource.svm = {"name": "svm1"}
+    resource.volume = {"name": "vol1"}
+    resource.type = "user"
+    resource.users = [{"name": "jsmith"}]
+    resource.qtree = {"name": "qt1"}
+    resource.user_mapping = "on"
+    resource.space = {"hard_limit": 8192, "soft_limit": 1024}
+    resource.files = {"hard_limit": 20, "soft_limit": 10}
+    resource.post(hydrate=True)
+    print(resource)
+'''
