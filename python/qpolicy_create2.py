@@ -11,7 +11,7 @@ from netapp_ontap.resources import QuotaRule
 
 with HostConnection("cluster1", username="admin", password="Netapp1!", verify=False):
     resource = QuotaRule()
-    resource.svm.name = "VServer1"
+    resource.svm = [{"name": "VServer1"}]
     resource.volume.name = "Vol1"
     resource.type = "user"
     resource.users = [{"name": "admin"}]
