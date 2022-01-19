@@ -15,6 +15,7 @@ import logging
 from netapp_ontap import config, HostConnection, NetAppRestError
 from netapp_ontap.resources import Qtree, QuotaRule, QosPolicy
 
+
 def create_qtree(volume_name: str, vserver_name: str, qtree_name: str) -> None:
     data = {
         'name': qtree_name,
@@ -33,6 +34,7 @@ def create_qtree(volume_name: str, vserver_name: str, qtree_name: str) -> None:
         print("Error: QTree was not created: %s" % err)
     return
 
+
 def create_policy_rule(volume_name: str, vserver_name: str, qtree_name: str, user_name: str, space_hard: int, file_hard: int) -> None:
     data = {
         'qtree': {'name': qtree_name},
@@ -41,8 +43,8 @@ def create_policy_rule(volume_name: str, vserver_name: str, qtree_name: str, use
         'files': {'hard_limit': file_hard, 'soft_limit': 100},
         'space': {'hard_limit': space_hard, 'soft_limit': 100},
         'type': 'user',
-        #ERROR: AttributeError: 'Namespace' object has no attribute 'user_name'
-         'users': {'name': user_name}
+        # ERROR: AttributeError: 'Namespace' object has no attribute 'user_name'
+        'users': {'name': user_name}
 
     }
     quotarule = QuotaRule(**data)
@@ -52,6 +54,7 @@ def create_policy_rule(volume_name: str, vserver_name: str, qtree_name: str, use
     except NetAppRestError as err:
         print("Error: Rule was not created: %s" % err)
     return
+
 
 def create_qos_policy(vserver_name: str, qos_policy_name: str) -> None:
     data = {
@@ -66,6 +69,7 @@ def create_qos_policy(vserver_name: str, qos_policy_name: str) -> None:
     except NetAppRestError as err:
         print("Error: Policy was not created: %s" % err)
     return
+
 
 def parse_args() -> argparse.Namespace:
     """Parse the command line arguments from the user"""
@@ -95,7 +99,7 @@ def parse_args() -> argparse.Namespace:
         "-fh", "--file_hard_limit", required=False, help="File Hard Limit"
     )
     parser.add_argument(
-       "-un", "--users_name", required=True, help="Quota Users name"
+        "-un", "--users_name", required=True, help="Quota Users name"
     )
     parser.add_argument("-u", "--api_user", default="admin", help="API Username")
     parser.add_argument("-p", "--api_pass", help="API Password")
@@ -106,6 +110,7 @@ def parse_args() -> argparse.Namespace:
         parsed_args.api_pass = getpass()
 
     return parsed_args
+
 
 if __name__ == "__main__":
     logging.basicConfig(
@@ -118,5 +123,6 @@ if __name__ == "__main__":
     )
     # Create a quota tree and a policy rule for the qtree
     create_qtree(args.volume_name, args.vserver_name, args.qtree_name)
-    create_policy_rule(args.volume_name, args.vserver_name, args.qtree_name, args.user_name, args.space_hard, args.file_hard)
+    create_policy_rule(args.volume_name, args.vserver_name, args.qtree_name, args.user_name, args.space_hard,
+                       args.file_hard)
     create_qos_policy(args.vserver_name, args.qos_policy_name)
