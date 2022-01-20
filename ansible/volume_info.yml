@@ -18,14 +18,14 @@
 #              name: 'Vol*'
 #            volume-state-attributes:
 #              state: online
-#        desired_attributes:
-#          volume-attributes:
-#            volume-id-attributes:
-#              name:
+        desired_attributes:
+          volume-attributes:
+            volume-id-attributes:
+              name:
 #              uuid:
 #            volume-state-attributes:
 #              state:
       <<: *login
     register: ontap
   - debug:
-     msg: "{{ ontap.volume_id_attributes.name }}"
+     msg: "{{ ontap }}"
