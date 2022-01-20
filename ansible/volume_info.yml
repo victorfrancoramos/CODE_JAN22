@@ -28,4 +28,4 @@
       <<: *login
     register: ontap
   - debug:
-     msg: "{{ ontap.name }}"
+     msg: "{{ ontap.volume_id_attributes.name }}"
