@@ -34,7 +34,6 @@ def create_svm(vserver_name: str, aggr_name: str) -> None:
     except NetAppRestError as err:
         print("Error: SVM was not created: %s" % err)
         print(err)
-        sys.exit(1)
         tmp = dict(response.json())
         print("Error status_code: %s " % tmp['status_code'])
 #        print("Error status_code: %s" % err.status_code)
