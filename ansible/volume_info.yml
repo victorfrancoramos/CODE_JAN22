@@ -18,13 +18,13 @@
 #              name: 'Vol*'
 #            volume-state-attributes:
 #              state: online
-        desired_attributes:
-          volume-attributes:
-            volume-id-attributes:
-              name:
-              uuid:
-            volume-state-attributes:
-              state:
+#        desired_attributes:
+#          volume-attributes:
+#            volume-id-attributes:
+#              name:
+#              uuid:
+#            volume-state-attributes:
+#              state:
       <<: *login
     register: volume_info
   - debug:
