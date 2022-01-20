@@ -26,6 +26,6 @@
 #            volume-state-attributes:
 #              state:
       <<: *login
-    register: volume_info
+    register: ontap
   - debug:
-     msg: "{{ volume_info.volume_info }}"
+     msg: "{{ ontap }}"
