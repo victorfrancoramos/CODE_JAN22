@@ -12,12 +12,12 @@
   - name: gather volume info
     na_ontap_info:
       gather_subset: volume_info
-        query:
-          volume-attributes:
-            volume-id-attributes:
-              name: '*'
-            volume-state-attributes:
-              state: online
+#        query:
+#          volume-attributes:
+#            volume-id-attributes:
+#              name: 'Vol*'
+#            volume-state-attributes:
+#              state: online
         desired_attributes:
           volume-attributes:
             volume-id-attributes:
