@@ -33,7 +33,11 @@ def create_svm(vserver_name: str, aggr_name: str) -> None:
         print("SVM %s created successfully" % svm.name)
     except NetAppRestError as err:
         print("Error: SVM was not created: %s" % err)
-        print("Error status_code: %s" % err.status_code)
+        for x in err.get_collection():
+            x.get()
+            print("Collection elements:")
+            print(x)
+#        print("Error status_code: %s" % err.status_code)
     return
 
 def parse_args() -> argparse.Namespace:
