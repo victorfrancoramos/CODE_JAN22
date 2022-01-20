@@ -1,0 +1,31 @@
+---
+- hosts: localhost
+  name: Get Volumes info
+  vars:
+    login: &login
+     hostname: 192.168.0.102 # NetApp Cluster IP
+     username: admin # Cluster User
+     password: Netapp1! # Cluster Password
+     https: true
+     validate_certs: false
+  tasks:
+  - name: gather volume info
+    na_ontap_info:
+      gather_subset: volume_info
+        query:
+          volume-attributes:
+            volume-id-attributes:
+              name: '*'
+            volume-state-attributes:
+              state: online
+        desired_attributes:
+          volume-attributes:
+            volume-id-attributes:
+              name:
+              uuid:
+            volume-state-attributes:
+              state:
+      <<: *login
+    register: volume_info
+  - debug:
+     msg: "{{ volume_info.volume_info }}"
