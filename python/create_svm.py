@@ -10,7 +10,6 @@ python3.7 create_svm.py: -c cluster -a aggr_name, -vs/--vserver_name
 import argparse
 from getpass import getpass
 import logging
-from typing import Optional
 
 from netapp_ontap import config, utils, HostConnection, NetAppRestError
 from netapp_ontap.resources import Svm
