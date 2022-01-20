@@ -3,8 +3,8 @@
 """
 ONTAP 9.7 REST API Python Client Library Scripts: This script performs the following:
         Create sn SVM by using the netapp_ontap library.
-Usage: create_svm.py [-h] -c CLUSTER -a AGGR_NAME, -vs VSERVER_NAME, [-u API_USER] [-p API_PASS]
-python3.7 create_svm.py: -c cluster -a aggr_name, -vs/--vserver_name
+Usage: svm_create.py [-h] -c CLUSTER -a AGGR_NAME, -vs VSERVER_NAME, [-u API_USER] [-p API_PASS]
+python3.7 svm_create.py: -c cluster -a aggr_name, -vs/--vserver_name
 """
 
 import argparse
@@ -33,6 +33,7 @@ def create_svm(vserver_name: str, aggr_name: str) -> None:
         print("SVM %s created successfully" % svm.name)
     except NetAppRestError as err:
         print("Error: SVM was not created: %s" % err)
+        print("Error status_code: %s" % err.status_code)
     return
 
 def parse_args() -> argparse.Namespace:
