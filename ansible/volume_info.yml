@@ -26,6 +26,6 @@
 #            volume-state-attributes:
 #              state:
       <<: *login
-    register: ontap
+    register: VOL_UUID
   - debug:
-     msg: "{{ ontap }}"
+     msg: "{{ VOL_UUID }}"
